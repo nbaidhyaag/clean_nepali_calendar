@@ -20,6 +20,7 @@ class _MonthView extends StatefulWidget {
     this.headerDayBuilder,
     this.dateCellBuilder,
     this.headerBuilder,
+    this.callback,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(selectedDate.isAfter(firstDate)),
         super(key: key);
@@ -50,6 +51,7 @@ class _MonthView extends StatefulWidget {
   final HeaderDayBuilder? headerDayBuilder;
   final DateCellBuilder? dateCellBuilder;
   final HeaderBuilder? headerBuilder;
+  final Function(PageController controller)? callback;
 
   @override
   _MonthViewState createState() => _MonthViewState();
@@ -147,6 +149,7 @@ class _MonthViewState extends State<_MonthView>
 
   Widget _buildItems(BuildContext context, int index) {
     final month = _addMonthsToMonthDate(widget.firstDate, index);
+    widget.callback!(_dayPickerController);
     return _DaysView(
       key: ValueKey<NepaliDateTime>(month),
       headerStyle: widget.headerStyle,
@@ -208,7 +211,6 @@ class _MonthViewState extends State<_MonthView>
       _nextMonthDate = _addMonthsToMonthDate(widget.firstDate, monthPage + 1);
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {

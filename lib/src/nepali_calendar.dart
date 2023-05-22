@@ -36,6 +36,7 @@ class CleanNepaliCalendar extends StatefulWidget {
     this.dateCellBuilder,
     this.enableVibration = true,
     this.headerBuilder,
+    this.callback,
   }) : super(key: key);
 
   final NepaliDateTime? initialDate;
@@ -54,6 +55,7 @@ class CleanNepaliCalendar extends StatefulWidget {
   final DateCellBuilder? dateCellBuilder;
   final HeaderBuilder? headerBuilder;
   final bool enableVibration;
+  final Function(PageController controller)? callback;
 
   @override
   CleanNepaliCalendarState createState() => CleanNepaliCalendarState();
