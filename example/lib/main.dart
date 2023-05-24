@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   final NepaliCalendarController _nepaliCalendarController =
       NepaliCalendarController();
-
+  PageController? _ctrl;
   @override
   Widget build(BuildContext context) {
     final NepaliDateTime first = NepaliDateTime(2075, 5);
@@ -33,6 +33,7 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             CleanNepaliCalendar(
+              callback: (controller) => _ctrl = controller,
               headerDayBuilder: (_, index) {
                 return Align(
                     alignment: Alignment.topCenter,

@@ -20,7 +20,7 @@ class _MonthView extends StatefulWidget {
     this.headerDayBuilder,
     this.dateCellBuilder,
     this.headerBuilder,
-     this.callback,
+    required this.callback,
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(selectedDate.isAfter(firstDate)),
         super(key: key);
@@ -51,7 +51,7 @@ class _MonthView extends StatefulWidget {
   final HeaderDayBuilder? headerDayBuilder;
   final DateCellBuilder? dateCellBuilder;
   final HeaderBuilder? headerBuilder;
-  final Function(PageController controller)? callback;
+  final Function(PageController controller) callback;
 
   @override
   _MonthViewState createState() => _MonthViewState();
