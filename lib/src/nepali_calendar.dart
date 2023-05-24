@@ -119,7 +119,7 @@ class CleanNepaliCalendarState extends State<CleanNepaliCalendar> {
 
   Widget _buildPicker() {
     return _MonthView(
-      callback: (controller) => widget.callback!(controller),
+      callback: (controller) => widget.callback(controller),
       key: _pickerKey,
       headerStyle: widget.headerStyle,
       calendarStyle: widget.calendarStyle,

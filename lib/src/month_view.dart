@@ -149,7 +149,7 @@ class _MonthViewState extends State<_MonthView>
 
   Widget _buildItems(BuildContext context, int index) {
     final month = _addMonthsToMonthDate(widget.firstDate, index);
-    widget.callback!(_dayPickerController);
+    widget.callback(_dayPickerController);
     return _DaysView(
       key: ValueKey<NepaliDateTime>(month),
       headerStyle: widget.headerStyle,
