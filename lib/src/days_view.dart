@@ -201,8 +201,8 @@ class _DaysView extends StatelessWidget {
       children: <Widget>[
         Flexible(
           child: GridView.custom(
-            physics: const NeverScrollableScrollPhysics(),
             gridDelegate: _kDayPickerGridDelegate,
+            primary: false,
             childrenDelegate:
                 SliverChildListDelegate(labels, addRepaintBoundaries: false),
           ),

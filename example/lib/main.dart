@@ -24,11 +24,11 @@ class HomePage extends StatelessWidget {
   PageController? _ctrl;
   @override
   Widget build(BuildContext context) {
-    final NepaliDateTime first = NepaliDateTime(2075, 5);
-    final NepaliDateTime last = NepaliDateTime(2079, 3);
+    final NepaliDateTime first = NepaliDateTime(2080, 1);
+    final NepaliDateTime last = NepaliDateTime(2081, 1);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Clean Nepali Calendar'),
+        title: const Text('Clean Nepali Calendar'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -61,8 +61,8 @@ class HomePage extends StatelessWidget {
               calendarStyle: CalendarStyle(
                 // weekEndTextColor : Colors.green,
                 selectedColor: Colors.deepOrange,
-                dayStyle: TextStyle(fontWeight: FontWeight.bold),
-                todayStyle: TextStyle(
+                dayStyle: const TextStyle(fontWeight: FontWeight.bold),
+                todayStyle: const TextStyle(
                   fontSize: 20.0,
                 ),
                 todayColor: Colors.orange.shade400,
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                 renderDaysOfWeek: true,
                 highlightToday: true,
               ),
-              headerStyle: HeaderStyle(
+              headerStyle: const HeaderStyle(
                 enableFadeTransition: false,
                 centerHeaderTitle: false,
                 titleTextStyle: TextStyle(
@@ -129,8 +129,8 @@ class HomePage extends StatelessWidget {
     }
 
     return AnimatedContainer(
-      padding: EdgeInsets.all(3),
-      duration: Duration(milliseconds: 2000),
+      padding: const EdgeInsets.all(3),
+      duration: const Duration(milliseconds: 2000),
       decoration: _buildCellDecoration(),
       child: Center(
         child: Column(
@@ -140,7 +140,7 @@ class HomePage extends StatelessWidget {
                     fontSize: 20, color: isWeekend ? Colors.red : null)),
 
             // to show events
-            Align(
+            const Align(
                 alignment: Alignment.bottomCenter,
                 child: CircleAvatar(
                   radius: 1,

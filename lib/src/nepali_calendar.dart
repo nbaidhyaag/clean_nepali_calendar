@@ -12,7 +12,7 @@ String formattedMonth(
     );
 
 //revert this to 6
-const int _kMaxDayPickerRowCount = 5; // A 31 day month that starts on Saturday.
+const int _kMaxDayPickerRowCount = 6; // A 31 day month that starts on Saturday.
 // Two extra rows: one for the day-of-week header and one for the month header.
 const double _kMaxDayPickerHeight =
     _kDayPickerRowHeight * (_kMaxDayPickerRowCount + 2);
