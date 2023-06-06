@@ -5,14 +5,15 @@ typedef HeaderDayBuilder = Widget Function(String headerName, int dayNumber);
 const double _kDayPickerRowHeight = 40.0;
 
 class _DayPickerGridDelegate extends SliverGridDelegate {
-  const _DayPickerGridDelegate();
+  const _DayPickerGridDelegate({required this.rowCount});
+  final int rowCount;
 
   @override
   SliverGridLayout getLayout(SliverConstraints constraints) {
     const columnCount = 7;
     final tileWidth = constraints.crossAxisExtent / columnCount;
     final tileHeight = math.min(_kDayPickerRowHeight,
-        constraints.viewportMainAxisExtent / (_kMaxDayPickerRowCount + 1));
+        constraints.viewportMainAxisExtent / (rowCount + 1));
     return SliverGridRegularTileLayout(
       crossAxisCount: columnCount,
       mainAxisStride: tileHeight,
@@ -27,11 +28,13 @@ class _DayPickerGridDelegate extends SliverGridDelegate {
   bool shouldRelayout(_DayPickerGridDelegate oldDelegate) => false;
 }
 
-const _DayPickerGridDelegate _kDayPickerGridDelegate = _DayPickerGridDelegate();
+_DayPickerGridDelegate _kDayPickerGridDelegate({required int rowCount}) =>
+    _DayPickerGridDelegate(rowCount: rowCount);
 
 class _DaysView extends StatelessWidget {
   _DaysView({
     Key? key,
+    required this.rowCount,
     required this.selectedDate,
     required this.currentDate,
     required this.onChanged,
@@ -49,6 +52,8 @@ class _DaysView extends StatelessWidget {
   })  : assert(!firstDate.isAfter(lastDate)),
         assert(selectedDate.isAfter(firstDate)),
         super(key: key);
+
+  final int rowCount;
 
   final NepaliDateTime selectedDate;
 
@@ -201,7 +206,7 @@ class _DaysView extends StatelessWidget {
       children: <Widget>[
         Flexible(
           child: GridView.custom(
-            gridDelegate: _kDayPickerGridDelegate,
+            gridDelegate: _kDayPickerGridDelegate(rowCount: rowCount),
             primary: false,
             childrenDelegate:
                 SliverChildListDelegate(labels, addRepaintBoundaries: false),

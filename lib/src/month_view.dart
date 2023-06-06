@@ -63,9 +63,22 @@ class _MonthViewState extends State<_MonthView>
       Tween<double>(begin: 1.0, end: 0.0)
           .chain(CurveTween(curve: Curves.easeInOut));
 
+  final ValueNotifier<int> _kMaxDayPickerRowCount = ValueNotifier<int>(5);
+  final ValueNotifier<double> _kMaxDayPickerHeight =
+      ValueNotifier<double>(_kDayPickerRowHeight * (7));
+
   @override
   void initState() {
     super.initState();
+    if (widget.selectedDate.totalDays > 30) {
+      _kMaxDayPickerRowCount.value = 6;
+    } else {
+      _kMaxDayPickerRowCount.value = 5;
+    }
+
+    _kMaxDayPickerHeight.value =
+        _kDayPickerRowHeight * (_kMaxDayPickerRowCount.value + 2);
+
     // Initially display the pre-selected date.
     final monthPage = _monthDelta(widget.firstDate, widget.selectedDate);
     _dayPickerController = PageController(initialPage: monthPage);
@@ -150,23 +163,28 @@ class _MonthViewState extends State<_MonthView>
   Widget _buildItems(BuildContext context, int index) {
     final month = _addMonthsToMonthDate(widget.firstDate, index);
     widget.callback(_dayPickerController);
-    return _DaysView(
-      key: ValueKey<NepaliDateTime>(month),
-      headerStyle: widget.headerStyle,
-      calendarStyle: widget.calendarStyle,
-      selectedDate: widget.selectedDate,
-      currentDate: _todayDate,
-      onChanged: widget.onChanged,
-      firstDate: widget.firstDate,
-      lastDate: widget.lastDate,
-      displayedMonth: month,
-      language: widget.language,
-      selectableDayPredicate: widget.selectableDayPredicate,
-      dragStartBehavior: widget.dragStartBehavior,
-      headerDayType: widget.headerDayType,
-      headerDayBuilder: widget.headerDayBuilder,
-      dateCellBuilder: widget.dateCellBuilder,
-    );
+    return ValueListenableBuilder<int>(
+        valueListenable: _kMaxDayPickerRowCount,
+        builder: (context, kMaxDayPickerRowCount, _) {
+          return _DaysView(
+            rowCount: kMaxDayPickerRowCount,
+            key: ValueKey<NepaliDateTime>(month),
+            headerStyle: widget.headerStyle,
+            calendarStyle: widget.calendarStyle,
+            selectedDate: widget.selectedDate,
+            currentDate: _todayDate,
+            onChanged: widget.onChanged,
+            firstDate: widget.firstDate,
+            lastDate: widget.lastDate,
+            displayedMonth: month,
+            language: widget.language,
+            selectableDayPredicate: widget.selectableDayPredicate,
+            dragStartBehavior: widget.dragStartBehavior,
+            headerDayType: widget.headerDayType,
+            headerDayBuilder: widget.headerDayBuilder,
+            dateCellBuilder: widget.dateCellBuilder,
+          );
+        });
   }
 
   void _handleNextMonth() {
@@ -214,71 +232,77 @@ class _MonthViewState extends State<_MonthView>
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: _kMaxDayPickerHeight,
-      child: Column(
-        children: <Widget>[
-          _CalendarHeader(
-            onHeaderLongPressed: widget.onHeaderLongPressed,
-            onHeaderTapped: widget.onHeaderTapped,
-            language: widget.language,
-            handleNextMonth: _handleNextMonth,
-            handlePreviousMonth: _handlePreviousMonth,
-            headerStyle: widget.headerStyle,
-            chevronOpacityAnimation: _chevronOpacityAnimation,
-            isDisplayingFirstMonth: _isDisplayingFirstMonth,
-            previousMonthDate: _previousMonthDate,
-            date: _currentDisplayedMonthDate,
-            isDisplayingLastMonth: _isDisplayingLastMonth,
-            nextMonthDate: _nextMonthDate,
-            changeToToday: () {
-              widget.onChanged(NepaliDateTime.now());
-            },
-            headerBuilder: widget.headerBuilder,
-          ),
-          Expanded(
-            child: Stack(
+    return ValueListenableBuilder<double>(
+        valueListenable: _kMaxDayPickerHeight,
+        builder: (context, kMaxDayPickerHeight, _) {
+          return SizedBox(
+            height: kMaxDayPickerHeight,
+            child: Column(
               children: <Widget>[
-                Semantics(
-                  sortKey: _MonthPickerSortKey.calendar,
-                  child: NotificationListener<ScrollStartNotification>(
-                    onNotification: (_) {
-                      _chevronOpacityController.forward();
-                      return false;
-                    },
-                    child: NotificationListener<ScrollEndNotification>(
-                      onNotification: (_) {
-                        _chevronOpacityController.reverse();
-                        return false;
-                      },
-                      child: PageView.builder(
-                        dragStartBehavior: widget.dragStartBehavior,
-                        key: ValueKey<NepaliDateTime>(widget.selectedDate),
-                        controller: _dayPickerController,
-                        scrollDirection: Axis.horizontal,
-                        itemCount:
-                            _monthDelta(widget.firstDate, widget.lastDate) + 1,
-                        itemBuilder: _buildItems,
-                        onPageChanged: _handleMonthPageChanged,
+                _CalendarHeader(
+                  onHeaderLongPressed: widget.onHeaderLongPressed,
+                  onHeaderTapped: widget.onHeaderTapped,
+                  language: widget.language,
+                  handleNextMonth: _handleNextMonth,
+                  handlePreviousMonth: _handlePreviousMonth,
+                  headerStyle: widget.headerStyle,
+                  chevronOpacityAnimation: _chevronOpacityAnimation,
+                  isDisplayingFirstMonth: _isDisplayingFirstMonth,
+                  previousMonthDate: _previousMonthDate,
+                  date: _currentDisplayedMonthDate,
+                  isDisplayingLastMonth: _isDisplayingLastMonth,
+                  nextMonthDate: _nextMonthDate,
+                  changeToToday: () {
+                    widget.onChanged(NepaliDateTime.now());
+                  },
+                  headerBuilder: widget.headerBuilder,
+                ),
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      Semantics(
+                        sortKey: _MonthPickerSortKey.calendar,
+                        child: NotificationListener<ScrollStartNotification>(
+                          onNotification: (_) {
+                            _chevronOpacityController.forward();
+                            return false;
+                          },
+                          child: NotificationListener<ScrollEndNotification>(
+                            onNotification: (_) {
+                              _chevronOpacityController.reverse();
+                              return false;
+                            },
+                            child: PageView.builder(
+                              dragStartBehavior: widget.dragStartBehavior,
+                              key:
+                                  ValueKey<NepaliDateTime>(widget.selectedDate),
+                              controller: _dayPickerController,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _monthDelta(
+                                      widget.firstDate, widget.lastDate) +
+                                  1,
+                              itemBuilder: _buildItems,
+                              onPageChanged: _handleMonthPageChanged,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      /*  PositionedDirectional(
+                      top: 0.0,
+                      start: 8.0,
+                    ), */
+                      /* PositionedDirectional(
+                      top: 0.0,
+                      end: 8.0,
+                      child: 
+                    ), */
+                    ],
                   ),
                 ),
-                /*  PositionedDirectional(
-                  top: 0.0,
-                  start: 8.0,
-                ), */
-                /* PositionedDirectional(
-                  top: 0.0,
-                  end: 8.0,
-                  child: 
-                ), */
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
   @override
